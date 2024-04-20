@@ -15,189 +15,298 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "ifsuldeminas.mch.calc";
     private Button buttonIgual;
+    private Button buttonZero;
+    private Button buttonUm;
+    private Button buttonDois;
+    private Button buttonTres;
+    private Button buttonQuatro;
+    private Button buttonCinco;
+    private Button buttonSeis;
+    private Button buttonSete;
+    private Button buttonOito;
+    private Button buttonNove;
+    private Button buttonSoma;
+    private Button buttonMult;
+    private Button buttonDiv;
+    private Button buttonSub;
+    private Button buttonPorc;
+    private Button buttonC;
+    private Button buttonD;
+    private Button buttonVirgula;
     private TextView textViewResultado;
     private TextView textViewUltimaExpressao;
+    private String expressao = "";
 
-    private void adicionarDigito(String digito) {
-        String expressaoAtual = textViewResultado.getText().toString();
-        // Verifica se a expressão atual é "0"
-        if (expressaoAtual.equals("0")) {
-            textViewResultado.setText(digito);
-        } else {
-            String novaExpressao = expressaoAtual + digito;
-            textViewResultado.setText(novaExpressao);
-        }
+    //função para digitar
+    private void adicionarDigito(Button digito) {
+        expressao += digito.getText();
+        textViewUltimaExpressao.setText(expressao);
     }
 
+    //função para limpar a empressão e o resultado
     private void limparExpressao() {
+        expressao = "";
+        textViewUltimaExpressao.setText(expressao);
         textViewResultado.setText("0");
+
     }
 
+    //função para deletar o ultimo digito
     private void deletarUltimoCaractere() {
-        String expressaoAtual = textViewResultado.getText().toString();
-        if (expressaoAtual.length() > 0) {
-            String novaExpressao = expressaoAtual.substring(0, expressaoAtual.length() - 1);
-            textViewResultado.setText(novaExpressao);
+        if (!expressao.isEmpty()) { // Verifica se a string não está vazia
+            expressao = expressao.substring(0, expressao.length() - 1);
+            textViewUltimaExpressao.setText(expressao);
         }
     }
 
+    //função para adicionar operadores
+    private void adicionarOperador(Button operador) {
+        if (!expressao.isEmpty()) {
+            char ultimoCaractere = expressao.charAt(expressao.length() - 1);
+            // Verifica se o último caractere não é um operador
+            if (!isOperador(ultimoCaractere)) {
+                expressao += operador.getText();
+                textViewUltimaExpressao.setText(expressao);
+            } else { // Substitui o último operador pelo operador atual
+                expressao = expressao.substring(0, expressao.length() - 1) + operador.getText();
+                textViewUltimaExpressao.setText(expressao);
+            }
+        }
+    }
+
+
+    // Função para verificar se um caractere é um operador
+    private boolean isOperador(char caractere) {
+        return caractere == '+' || caractere == '-' || caractere == '*' || caractere == '/' || caractere == '%';
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        buttonZero = findViewById(R.id.buttonZeroID);
+        buttonUm = findViewById(R.id.buttonUmID);
+        buttonDois = findViewById(R.id.buttonDoisID);
+        buttonTres = findViewById(R.id.buttonTresID);
+        buttonQuatro = findViewById(R.id.buttonQuatroID);
+        buttonCinco = findViewById(R.id.buttonCincoID);
+        buttonSeis = findViewById(R.id.buttonSeisID);
+        buttonSete = findViewById(R.id.buttonSeteID);
+        buttonOito = findViewById(R.id.buttonOitoID);
+        buttonNove = findViewById(R.id.buttonNoveID);
+        buttonSoma = findViewById(R.id.buttonSomaID);
+        buttonSub = findViewById(R.id.buttonSubtracaoID);
+        buttonMult = findViewById(R.id.buttonMultiplicacaoID);
+        buttonDiv = findViewById(R.id.buttonDivisaoID);
+        buttonPorc = findViewById(R.id.buttonPorcentoID);
+        buttonVirgula = findViewById(R.id.buttonVirgulaID);
         textViewResultado = findViewById(R.id.textViewResultadoID);
         textViewUltimaExpressao = findViewById(R.id.textViewUltimaExpressaoID);
-
         buttonIgual = findViewById(R.id.buttonIgualID);
+        buttonC = findViewById(R.id.buttonResetID);
+        buttonD = findViewById(R.id.buttonDeleteID);
+
+
         buttonIgual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Calculable avaliadorExpressao = null;
                 try {
-                    String expressao = "5+1+4*2";
-                    avaliadorExpressao = new ExpressionBuilder(expressao).build();
-
+                    Calculable avaliadorExpressao = new ExpressionBuilder(expressao).build();
                     Double resultado = avaliadorExpressao.calculate();
-
-                    textViewUltimaExpressao.setText(expressao);
                     textViewResultado.setText(resultado.toString());
+                    expressao = "";
+                    textViewUltimaExpressao.setText(expressao);
                 } catch (Exception e) {
                     Log.d(TAG, e.getMessage());
                 }
             }
         });
 
-        Button buttonZero = findViewById(R.id.buttonZeroID);
+//        buttonIgual.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                try {
+//                    char ultimoCaractere = expressao.charAt(expressao.length() - 1);
+//                    if (isOperador(ultimoCaractere)) {
+//                        expressao += expressao.substring(0, expressao.length() - 1); // Adiciona o último número novamente
+//                    }
+//                    Calculable avaliadorExpressao = new ExpressionBuilder(expressao).build();
+//                    Double resultado = avaliadorExpressao.calculate();
+//                    textViewResultado.setText(resultado.toString());
+//                    expressao = "";
+//                    textViewUltimaExpressao.setText(expressao);
+//                } catch (Exception e) {
+//                    Log.d(TAG, e.getMessage());
+//                }
+//            }
+//        });
+
         buttonZero.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adicionarDigito(getString(R.string.button_zero));
+                adicionarDigito(buttonZero);
             }
         });
 
-        Button buttonUm = findViewById(R.id.buttonUmID);
         buttonUm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adicionarDigito(getString(R.string.button_um));
+                adicionarDigito(buttonUm);
             }
         });
 
-        Button buttonDois = findViewById(R.id.buttonDoisID);
         buttonDois.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adicionarDigito(getString(R.string.button_dois));
+                adicionarDigito(buttonDois);
             }
         });
 
-        Button buttonTres = findViewById(R.id.buttonTresID);
         buttonTres.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adicionarDigito(getString(R.string.button_tres));
+                adicionarDigito(buttonTres);
             }
         });
 
-        Button buttonQuatro = findViewById(R.id.buttonQuatroID);
         buttonQuatro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adicionarDigito(getString(R.string.button_quatro));
+                adicionarDigito(buttonQuatro);
             }
         });
 
-        Button buttonCinco = findViewById(R.id.buttonCincoID);
         buttonCinco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adicionarDigito(getString(R.string.button_cinco));
+                adicionarDigito(buttonCinco);
             }
         });
 
-        Button buttonSeis = findViewById(R.id.buttonSeisID);
         buttonSeis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adicionarDigito(getString(R.string.button_seis));
+                adicionarDigito(buttonSeis);
             }
         });
 
-        Button buttonSete = findViewById(R.id.buttonSeteID);
         buttonSete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adicionarDigito(getString(R.string.button_sete));
+                adicionarDigito(buttonSete);
             }
         });
 
-        Button buttonOito = findViewById(R.id.buttonOitoID);
         buttonOito.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adicionarDigito(getString(R.string.button_oito));
+                adicionarDigito(buttonOito);
             }
         });
 
-        Button buttonNove = findViewById(R.id.buttonNoveID);
         buttonNove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adicionarDigito(getString(R.string.button_nove));
+                adicionarDigito(buttonNove);
             }
         });
 
-        Button buttonSoma = findViewById(R.id.buttonSomaID);
         buttonSoma.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adicionarDigito(getString(R.string.button_soma));
+                if(!expressao.isEmpty()){
+                    adicionarOperador(buttonSoma);
+                } else{
+                    if(! textViewResultado.getText().equals("0")){
+                        expressao += textViewResultado.getText();
+                        adicionarOperador(buttonSoma);
+                        textViewUltimaExpressao.setText(expressao);
+                        textViewResultado.setText("0");
+                    }
+                }
             }
         });
 
-        Button buttonSubtracao = findViewById(R.id.buttonSubtracaoID);
-        buttonSubtracao.setOnClickListener(new View.OnClickListener() {
+        buttonSub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adicionarDigito(getString(R.string.button_subtracao));
+                if(!expressao.isEmpty()){
+                    adicionarOperador(buttonSub);
+                } else{
+                    if(! textViewResultado.getText().equals("0")){
+                        expressao += textViewResultado.getText();
+                        adicionarOperador(buttonSub);
+                        textViewUltimaExpressao.setText(expressao);
+                        textViewResultado.setText("0");
+                    }
+                }
             }
         });
 
-        Button buttonMultiplicacao = findViewById(R.id.buttonMultiplicacaoID);
-        buttonMultiplicacao.setOnClickListener(new View.OnClickListener() {
+        buttonMult.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adicionarDigito(getString(R.string.button_multiplicacao));
+                if(!expressao.isEmpty()){
+                    adicionarOperador(buttonMult);
+                } else{
+                    if(! textViewResultado.getText().equals("0")){
+                        expressao += textViewResultado.getText();
+                        adicionarOperador(buttonMult);
+                        textViewUltimaExpressao.setText(expressao);
+                        textViewResultado.setText("0");
+                    }
+                }
             }
         });
 
-        Button buttonDivisao = findViewById(R.id.buttonDivisaoID);
-        buttonDivisao.setOnClickListener(new View.OnClickListener() {
+        buttonDiv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adicionarDigito(getString(R.string.button_divisao));
+                if(!expressao.isEmpty()){
+                    adicionarOperador(buttonDiv);
+                } else{
+                    if(! textViewResultado.getText().equals("0")){
+                        expressao += textViewResultado.getText();
+                        adicionarOperador(buttonDiv);
+                        textViewUltimaExpressao.setText(expressao);
+                        textViewResultado.setText("0");
+                    }
+                }
             }
         });
 
-        Button buttonPorcentagem = findViewById(R.id.buttonPorcentoID);
-        buttonPorcentagem.setOnClickListener(new View.OnClickListener() {
+        buttonPorc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adicionarDigito(getString(R.string.button_porcentagem));
+                if(!expressao.isEmpty()){
+                    adicionarOperador(buttonPorc);
+                } else{
+                    if(! textViewResultado.getText().equals("0")){
+                        expressao += textViewResultado.getText();
+                        adicionarOperador(buttonPorc);
+                        textViewUltimaExpressao.setText(expressao);
+                        textViewResultado.setText("0");
+                    }
+                }
             }
         });
 
-        Button buttonC = findViewById(R.id.buttonResetID);
-        buttonC.setOnClickListener(new View.OnClickListener() {
+        buttonVirgula.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                limparExpressao();
+                if(!expressao.isEmpty()){
+                    adicionarDigito(buttonVirgula);
+                } else{
+                    if(! textViewResultado.getText().equals("0")){
+                        expressao += textViewResultado.getText();
+                        textViewUltimaExpressao.setText(expressao);
+                        textViewResultado.setText("0");
+                    }
+                }
             }
         });
 
-        Button buttonD = findViewById(R.id.buttonDeleteID);
         buttonD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -205,6 +314,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        buttonC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                limparExpressao();
+            }
+        });
+
 
     }
+
 }

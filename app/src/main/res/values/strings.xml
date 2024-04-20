@@ -1,22 +1,5 @@
 <resources>
     <string name="app_name">Calculadora SI</string>
     <string name="text_view_result_height">60dp</string>
-    <string name="button_zero">0</string>
-    <string name="button_um">1</string>
-    <string name="button_dois">2</string>
-    <string name="button_tres">3</string>
-    <string name="button_quatro">4</string>
-    <string name="button_cinco">5</string>
-    <string name="button_seis">6</string>
-    <string name="button_sete">7</string>
-    <string name="button_oito">8</string>
-    <string name="button_nove">9</string>
-
-    <string name="button_soma">+</string>
-    <string name="button_subtracao">-</string>
-    <string name="button_multiplicacao">*</string>
-    <string name="button_divisao">÷</string>
-    <string name="button_porcentagem">%</string>
-
 
 </resources>
