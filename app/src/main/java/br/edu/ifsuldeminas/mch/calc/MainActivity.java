@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //função para adicionar operadores
+   //função para adicionar operadores
     private void adicionarOperador(Button operador) {
         if (!expressao.isEmpty()) {
             char ultimoCaractere = expressao.charAt(expressao.length() - 1);
@@ -67,13 +67,23 @@ public class MainActivity extends AppCompatActivity {
             if (!isOperador(ultimoCaractere)) {
                 expressao += operador.getText();
                 textViewUltimaExpressao.setText(expressao);
-            } else { // Substitui o último operador pelo operador atual
-                expressao = expressao.substring(0, expressao.length() - 1) + operador.getText();
-                textViewUltimaExpressao.setText(expressao);
+            } else {
+                // Substitui o operador anterior apenas se o novo operador for - ou +
+                if ((ultimoCaractere == '+' || ultimoCaractere == '-')) {
+                    expressao = expressao.substring(0, expressao.length() - 1) + operador.getText();
+                    textViewUltimaExpressao.setText(expressao);
+                    // Se o último caractere for * ou /, adiciona o operador - normalmente.
+                } else if ((ultimoCaractere == '*' || ultimoCaractere == '/') && operador.getText().charAt(0) == '-') {
+                    expressao += operador.getText();
+                    textViewUltimaExpressao.setText(expressao);
+                } else {
+                    // Caso contrário, apenas adiciona o novo operador.
+                    expressao = expressao.substring(0, expressao.length() - 1) + operador.getText();
+                    textViewUltimaExpressao.setText(expressao);
+                }
             }
         }
     }
-
 
     // Função para verificar se um caractere é um operador
     private boolean isOperador(char caractere) {
@@ -112,6 +122,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
+                    char ultimoCaractere = expressao.charAt(expressao.length() - 1);
+                    if(isOperador(ultimoCaractere)){
+                        deletarUltimoCaractere();
+                        ultimoCaractere = expressao.charAt(expressao.length() - 1);
+                        if(isOperador(ultimoCaractere)){
+                            deletarUltimoCaractere();
+                        }
+                    }
                     Calculable avaliadorExpressao = new ExpressionBuilder(expressao).build();
                     Double resultado = avaliadorExpressao.calculate();
                     textViewResultado.setText(resultado.toString());
@@ -122,25 +140,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-//        buttonIgual.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                try {
-//                    char ultimoCaractere = expressao.charAt(expressao.length() - 1);
-//                    if (isOperador(ultimoCaractere)) {
-//                        expressao += expressao.substring(0, expressao.length() - 1); // Adiciona o último número novamente
-//                    }
-//                    Calculable avaliadorExpressao = new ExpressionBuilder(expressao).build();
-//                    Double resultado = avaliadorExpressao.calculate();
-//                    textViewResultado.setText(resultado.toString());
-//                    expressao = "";
-//                    textViewUltimaExpressao.setText(expressao);
-//                } catch (Exception e) {
-//                    Log.d(TAG, e.getMessage());
-//                }
-//            }
-//        });
 
         buttonZero.setOnClickListener(new View.OnClickListener() {
             @Override
